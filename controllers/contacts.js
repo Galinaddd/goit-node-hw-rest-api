@@ -3,7 +3,6 @@ const { Contact } = require("../models/contact");
 const { HttpError, ctrlWrapper } = require("../helpers");
 
 const getAll = async (req, res) => {
-  console.log("GET ALL");
   const result = await Contact.find();
   res.status(200).json(result);
 };
@@ -33,10 +32,6 @@ const deleteById = async (req, res) => {
 };
 
 const updateById = async (req, res) => {
-  const { name, email, phone } = req.body;
-  if (!name && !email && !phone) {
-    throw HttpError(400, "missing fields");
-  }
   const { contactId } = req.params;
   const result = await Contact.findByIdAndUpdate(contactId, req.body, {
     new: true,
@@ -48,11 +43,7 @@ const updateById = async (req, res) => {
 };
 
 const updateStatusContact = async (req, res, next) => {
-  console.log(req.body);
-  const { favorite } = req.body;
-  if (!favorite) {
-    throw HttpError(400, "missing field favorite");
-  }
+  
   const { contactId } = req.params;
   const result = await Contact.findByIdAndUpdate(contactId, req.body, {
     new: true,
