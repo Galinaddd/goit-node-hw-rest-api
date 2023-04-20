@@ -10,8 +10,6 @@ const { contactSchemas } = require("../../models");
 
 const router = express.Router();
 
-// router.use(authenticate);
-
 router.get("/", authenticate, ctrl.getAll);
 
 router.get("/:contactId", authenticate, isValidId, ctrl.getById);
@@ -19,8 +17,8 @@ router.get("/:contactId", authenticate, isValidId, ctrl.getById);
 router.post(
   "/",
   authenticate,
-  // validateBody,
-  // validateByJoiSchema(contactSchemas.addSchema),
+  validateBody,
+  validateByJoiSchema(contactSchemas.addSchema),
   ctrl.add
 );
 
