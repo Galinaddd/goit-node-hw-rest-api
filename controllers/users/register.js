@@ -3,12 +3,11 @@ const gravatar = require("gravatar");
 const { nanoid } = require("nanoid");
 
 const { User } = require("../../models");
-const { HttpError, sendEmail } = require("../../helpers");
+const { HttpError, sendVerifyEmail } = require("../../helpers");
 
 const { BASE_URL } = process.env;
 
 const register = async (req, res) => {
-  console.log("register");
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (user) {
@@ -19,7 +18,6 @@ const register = async (req, res) => {
   const avatarURL = gravatar.url(email);
 
   const verificationToken = nanoid();
-  console.log("verificationToken", verificationToken);
 
   const newUser = await User.create({
     ...req.body,
@@ -27,21 +25,21 @@ const register = async (req, res) => {
     avatarURL,
     verificationToken,
   });
-  console.log(newUser);
 
-  const verifyEmail = {
-    to: email,
-    subject: "Verify email",
-    html: `<a target="_blanc" href="${BASE_URL}/api/users/verify/${verificationToken}">Click verify email</a>`,
-  };
+  // const verifyEmail = {
+  //   to: email,
 
-  sendEmail(verifyEmail);
+  //   subject: "Verify email",
+  //   html: `<a target="_blanc" href="${BASE_URL}/api/users/verify/${verificationToken}">Click verify email</a>`,
+  // };
+
+  // sendEmail(verifyEmail);
+  sendVerifyEmail(newUser);
 
   res.status(201).json({
     user: {
       email: newUser.email,
       subscription: newUser.subscription,
-      verificationToken,
     },
   });
 };

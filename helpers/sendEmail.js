@@ -16,7 +16,7 @@ const sendEmail = (data) => {
   const transporter = nodemailer.createTransport(config);
 
   transporter
-    .sendMail(data)
+    .sendMail({ from: MAIL_USER, ...data })
     .then(() => {
       console.log("Email send success!");
     })

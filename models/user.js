@@ -46,6 +46,13 @@ const registerSchema = Joi.object({
   subscription: Joi.string().valid(...subscriptions),
 });
 
+const emailSchema = Joi.object({
+  email: Joi.string()
+    .email({ minDomainSegments: 2 })
+    .required()
+    .error(new Error("Missing required field email")),
+});
+
 const loginSchema = Joi.object({
   password: Joi.string().min(6).max(25).required(),
   email: Joi.string().email({ minDomainSegments: 2 }).required(),
@@ -57,6 +64,6 @@ userSchema.post("save", handleMongooseError);
 
 const User = model("user", userSchema);
 
-const userSchemas = { registerSchema, loginSchema };
+const userSchemas = { registerSchema, emailSchema, loginSchema };
 
 module.exports = { User, userSchemas };
